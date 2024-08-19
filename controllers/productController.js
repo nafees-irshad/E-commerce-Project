@@ -41,6 +41,18 @@ const productDetails = async(req,resp)=>{
     }
 }
 
+//get all products details
+const getAllProducts = async (req, resp) => {
+    try{
+        const products = await Product.find();
+        resp.status(200).json(products);
+    } catch (error) {
+        resp.status(500).json({ message: "Error fetching products",});
+    }
+};
+
+
+
 const deleteProduct = async(req,resp)=>{
     const id = req.params;
     try{
@@ -56,4 +68,4 @@ const deleteProduct = async(req,resp)=>{
     };
 }
 
-module.exports = {createProducts, updateAllProducts, productDetails, deleteProduct};
+module.exports = {createProducts, updateAllProducts, productDetails, deleteProduct, getAllProducts};
