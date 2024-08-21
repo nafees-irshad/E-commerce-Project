@@ -1,12 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const checkUserAuth = require('../middleware/authMiddleware')
+const validationSignUp = require('../middleware/validation')
 //Import userModel 
 const {userRegistration, userLogin, changePassword, updateUser, loggedUser} = require('../controllers/userController');
 
 //Route level Middleware 
 router.use('/change-password', checkUserAuth)
 router.use('/update', checkUserAuth)
+router.use('/register', validationSignUp)
 
 
 //Public Routes
