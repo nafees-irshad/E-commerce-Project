@@ -7,7 +7,11 @@ const validationSignUp = [
 
     check('password')
         .isLength({min:6})
-        .withMessage('Password must be at least 6 characters'),
+        .withMessage('Password must be at least 6 characters long'),
+
+    check('passwordConfirmation'),
+        .isLength({min:6})
+        .withMessage('Password must be at least 6 characters long')
 
     check('name')
         .notEmpty()

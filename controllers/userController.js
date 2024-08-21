@@ -12,7 +12,7 @@ const userRegistration = async (req, resp) => {
       status: "failed",
       message: "Email already exists."
     });
-  }
+  } 
 
   //Check All fields are inserted
   if (!(name && email && password && passwordConfirmation && tc)) {
