@@ -74,7 +74,6 @@ const updateSchema = joi
 
 module.exports = {
   userSchema,
-  changePasswordSchema,
   loginSchema,
-  updateSchema,
+  changePasswordSchema,
 };
