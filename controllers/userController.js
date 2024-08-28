@@ -2,6 +2,9 @@ const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
+const generateCode = (){
+  const code = Math.floor(100000 + Math.random() * 900000);
+}
 const userRegistration = async (req, resp) => {
   const { name, email, password, passwordConfirmation, tc, address } = req.body;
   const user = await User.findOne({ email: email });
