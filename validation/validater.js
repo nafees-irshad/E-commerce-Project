@@ -48,3 +48,5 @@ const validateUpdate = async (req, resp, next) => {
   }
 };
 module.exports = { validateSignUp, validateLogin, validateChangePassword };
+
+
