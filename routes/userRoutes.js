@@ -3,12 +3,14 @@ const router = express.Router();
 const checkUserAuth = require("../middleware/authMiddleware");
 const {
   validateSignUp,
+  validateVerification,
   validateLogin,
   validateChangePassword,
 } = require("../validation/validater");
 //Import userModel
 const {
   userRegistration,
+  verifyEmail,
   userLogin,
   changePassword,
 } = require("../controllers/userController");
@@ -19,6 +21,7 @@ router.use("/change-password", checkUserAuth);
 
 //Public Routes
 router.post("/register", validateSignUp, userRegistration);
+router.post("/verify-email", validateVerification, verifyEmail);
 router.post("/login", validateLogin, userLogin);
 
 //Protected Routes

@@ -1,8 +1,25 @@
-const { userSchema, loginSchema, changePasswordSchema } = require("./schemas");
+const {
+  userSchema,
+  loginSchema,
+  changePasswordSchema,
+  verificationSchema,
+} = require("./schemas");
 
 const validateSignUp = async (req, resp, next) => {
   try {
     const value = await userSchema.validateAsync(req.body);
+    next();
+  } catch (error) {
+    if (error.isJoi) {
+      return resp.json({ message: error.details[0].message });
+    }
+    resp.status(500).json({ message: "Internal server error" });
+  }
+};
+
+const validateVerification = async (req, resp, next) => {
+  try {
+    const value = await verificationSchema.validateAsync(req.body);
     next();
   } catch (error) {
     if (error.isJoi) {
@@ -47,6 +64,9 @@ const validateUpdate = async (req, resp, next) => {
     resp.status(500).json({ message: "Internal server error" });
   }
 };
-module.exports = { validateSignUp, validateLogin, validateChangePassword };
-
-
+module.exports = {
+  validateSignUp,
+  validateVerification,
+  validateLogin,
+  validateChangePassword,
+};

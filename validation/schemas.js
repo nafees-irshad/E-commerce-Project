@@ -28,6 +28,16 @@ const userSchema = joi.object({
     .messages({ "any.required": "You must accept the terms and conditions" }),
 });
 
+const verificationSchema = joi.object({
+  email: joi.string().email().required().messages({
+    "string.empty": "Email field cannot be empty.",
+    "string.email": "Enter a valid email address",
+  }),
+  code: joi.string().required().messages({
+    "string.empty": "Verification code field cannot be empty.",
+  }),
+});
+
 const changePasswordSchema = joi.object({
   currentPassword: joi.string().required().messages({
     "string.empty": "Current password cannot be empty.",
@@ -74,6 +84,7 @@ const updateSchema = joi
 
 module.exports = {
   userSchema,
+  verificationSchema,
   loginSchema,
   changePasswordSchema,
 };
