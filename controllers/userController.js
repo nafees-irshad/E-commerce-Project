@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
-
+require("dotenv").config();
 const generateCode = () => {
   // Generates a 6-digit hex code
   const code = crypto.randomBytes(3).toString("hex");
@@ -57,16 +57,16 @@ const userRegistration = async (req, resp) => {
 // Function to send verification email
 const sendVerificationEmail = (email, code) => {
   const transporter = nodemailer.createTransport({
-    service: "outlook",
-    host: "smtp.outlook.com",
-    port: 587,
+    service: process.env.EMAIL_SERVICE,
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
     auth: {
-      user: "nafees2013@hotmail.com",
-      pass: "Alzaro_8337+",
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
     },
   });
   const mailOptions = {
-    from: "nafees2013@hotmail.com",
+    from: process.env.EMAIL_USER,
     to: email,
     subject: "Verification code",
     text: `Your verification code is ${code}`,
