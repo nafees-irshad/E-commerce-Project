@@ -1,9 +1,17 @@
 const User = require("../models/userModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
+require("dotenv").config();
+const generateCode = () => {
+  // Generates a 6-digit hex code
+  const code = crypto.randomBytes(3).toString("hex");
+  return code;
+};
 const userRegistration = async (req, resp) => {
   const { name, email, password, passwordConfirmation, tc, address } = req.body;
+  const verificationCode = generateCode();
   const user = await User.findOne({ email: email });
 
   //check User Availblity
@@ -24,30 +32,75 @@ const userRegistration = async (req, resp) => {
       name: name,
       email: email,
       password: hashPassword,
+      verificationCode: verificationCode,
+      codeExpires: Date.now() + 3600000,
       tc: tc,
       address: address,
     });
 
     //Saving User Details
     await newUserDoc.save();
-    const newUser = await User.findOne({ email: email });
-
-    resp.status(201).json({
-      status: "success",
-      message: "User registered successfully",
-      user: {
-        id: newUser._id,
-        name: newUser.name,
-        email: newUser.email,
-        tc: newUser.tc,
-      },
-    });
+    //send verification mail
+    sendVerificationEmail(email, verificationCode);
+    resp
+      .status(200)
+      .json({ message: "User registered! Please verify your email." });
   } catch (err) {
     console.log(err);
     resp.status(500).json({
       status: "failed",
       message: "Error in registration",
     });
+  }
+};
+
+// Function to send verification email
+const sendVerificationEmail = (email, code) => {
+  const transporter = nodemailer.createTransport({
+    service: process.env.EMAIL_SERVICE,
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
+    },
+  });
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: "Verification code",
+    text: `Your verification code is ${code}`,
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log("Error sending email", error);
+    } else {
+      console.log("Email sent", info.response);
+    }
+  });
+};
+const verifyEmail = async (req, resp) => {
+  const { email, code } = req.body;
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(400).json({ error: "User not found" });
+    }
+
+    if (user.verificationCode === code && user.codeExpires > Date.now()) {
+      user.isVerified = true;
+      user.verificationCode = undefined;
+      user.codeExpires = undefined;
+      await user.save();
+
+      resp.status(200).json({ message: "Email verified successfully!" });
+    } else {
+      resp.status(400).json({ error: "Invalid or expired verification code" });
+    }
+  } catch (error) {
+    resp.status(500).json({ error: "Error verifying email." });
   }
 };
 
@@ -161,6 +214,7 @@ const loggedUser = async (req, resp) => {
 };
 module.exports = {
   userRegistration,
+  verifyEmail,
   userLogin,
   changePassword,
 };
