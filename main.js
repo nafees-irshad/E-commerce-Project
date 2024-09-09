@@ -5,6 +5,7 @@ const productRoutes = require("./routes/productRoues");
 const userRoutes = require("./routes/userRoutes");
 const cartRoutes = require("./routes/cartRoutes");
 const orderRoutes = require("./routes/orderRoutes.js");
+const wishlistRoutes = require("./routes/wishlistRoutes.js");
 
 const app = express();
 connectdb();
@@ -17,7 +18,10 @@ app.use("/api/category", categoryRoutes);
 app.use("/api/products", productRoutes);
 
 // User Routes
-app.use("/", userRoutes);
+app.use("/api/user", userRoutes);
+
+//wishlist routes
+app.use("/api/user", wishlistRoutes);
 
 //Cart Routes
 app.use("/api/cart", cartRoutes);
