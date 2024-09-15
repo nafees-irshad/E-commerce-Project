@@ -217,4 +217,5 @@ module.exports = {
   verifyEmail,
   userLogin,
   changePassword,
+  updateUser,
 };

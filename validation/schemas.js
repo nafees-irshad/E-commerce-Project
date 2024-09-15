@@ -72,19 +72,23 @@ const loginSchema = joi.object({
 
 const updateSchema = joi
   .object({
-    name: joi.string().max(30).required().messages({
+    name: joi.string().max(30).optional().messages({
       "string.empty": "Name field can not be empty",
     }),
-    email: joi.string().required().messages({
+    email: joi.string().email().optional().messages({
       "string.empty": "Email field can not be empty",
       "string.email": "Enter a valid email address",
     }),
+    address: joi.string().optional().messages({
+      "string.empty": "Address field can not be empty",
+    }),
   })
-  .or("name", "email");
+  .or("name", "email", "address");
 
 module.exports = {
   userSchema,
   verificationSchema,
   loginSchema,
   changePasswordSchema,
+  updateSchema,
 };

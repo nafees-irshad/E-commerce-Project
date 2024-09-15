@@ -3,6 +3,7 @@ const {
   loginSchema,
   changePasswordSchema,
   verificationSchema,
+  updateSchema,
 } = require("./schemas");
 
 const validateSignUp = async (req, resp, next) => {
@@ -69,4 +70,5 @@ module.exports = {
   validateVerification,
   validateLogin,
   validateChangePassword,
+  validateUpdate,
 };

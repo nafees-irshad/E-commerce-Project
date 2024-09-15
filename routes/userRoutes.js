@@ -6,6 +6,7 @@ const {
   validateVerification,
   validateLogin,
   validateChangePassword,
+  validateUpdate,
 } = require("../validation/validater");
 //Import userModel
 const {
@@ -13,11 +14,13 @@ const {
   verifyEmail,
   userLogin,
   changePassword,
+  resetPassword,
+  updateUser,
 } = require("../controllers/userController");
 
 //Route level Middleware
 router.use("/change-password", checkUserAuth);
-// router.use("/update", checkUserAuth);
+router.use("/update", checkUserAuth);
 
 //Public Routes
 router.post("/register", validateSignUp, userRegistration);
@@ -26,7 +29,7 @@ router.post("/login", validateLogin, userLogin);
 
 //Protected Routes
 router.post("/change-password", validateChangePassword, changePassword);
-// router.put("/update", updateUser);
+router.put("/update", validateUpdate, updateUser);
 // router.get("/logged-user", loggedUser);
 
 module.exports = router;
