@@ -207,15 +207,40 @@ const updateUser = async (req, resp) => {
   }
 };
 
-const loggedUser = async (req, resp) => {
-  resp.status(200).json({
-    user: req.user,
-  });
+const viewProfile = async (req, resp) => {
+  const id = req.user.id;
+  try {
+    const user = await User.findById(id);
+    if (user) {
+      resp.status(200).json({
+        status: "success",
+        message: "user fetched successfully",
+        data: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          address: user.address,
+        },
+      });
+    } else {
+      resp.status(404).json({
+        status: "failed",
+        message: "User not found",
+      });
+    }
+  } catch (err) {
+    console.error(err);
+    resp.status(500).json({
+      message: "internal server error",
+    });
+  }
 };
+
 module.exports = {
   userRegistration,
   verifyEmail,
   userLogin,
   changePassword,
   updateUser,
+  viewProfile,
 };
